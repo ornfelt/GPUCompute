@@ -60,7 +60,12 @@ if (NOT glm_FOUND)
         add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
     endif()
 endif()
-set_target_properties(glm PROPERTIES FOLDER "Dependencies")
+
+#set_target_properties(glm PROPERTIES FOLDER "Dependencies")
+#if(TARGET glm::glm)
+if(WIN32)
+    set_target_properties(glm::glm PROPERTIES FOLDER "Dependencies")
+endif()
 
 #
 # Projects

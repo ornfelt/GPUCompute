@@ -105,6 +105,7 @@ std::string LoadShaderSource(const std::filesystem::path& path);
 
 static uint32_t s_ShaderProgram = 0;
 
+#ifdef _WIN32
 // https://www.shadertoy.com/view/lsX3W4
 //static const std::filesystem::path s_FragmentShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/Mandelbrot.glsl";
 // https://www.shadertoy.com/view/MltXz2
@@ -117,6 +118,23 @@ static uint32_t s_ShaderProgram = 0;
 static const std::filesystem::path s_FragmentShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/Gravity.glsl";
 
 static const std::filesystem::path s_VertexShaderPath   = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#else
+
+// https://www.shadertoy.com/view/lsX3W4
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Mandelbrot.glsl";
+// https://www.shadertoy.com/view/MltXz2
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Mandelbrot2.glsl";
+// https://www.shadertoy.com/view/4df3Rn
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Mandelbrot3.glsl";
+// https://www.shadertoy.com/view/ldf3DN
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Mandelbrot4.glsl";
+// https://www.shadertoy.com/view/llj3Rz
+static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Gravity.glsl";
+
+static const std::filesystem::path s_VertexShaderPath   = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#endif
 
 static void ErrorCallback(int error, const char* description)
 {
@@ -341,10 +359,21 @@ GLuint CreateShaderProgram(const char* vertexShaderSource, const char* fragmentS
 std::string LoadShaderSource(const std::filesystem::path& path);
 
 static uint32_t s_ShaderProgram = 0;
+
+#ifdef _WIN32
 // https://www.shadertoy.com/view/llcSRf (DIABLO ORBS, not perfect)
 static const std::filesystem::path s_FragmentShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/DiabloOrbs.glsl";
 
 static const std::filesystem::path s_VertexShaderPath   = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#else
+
+// https://www.shadertoy.com/view/llcSRf (DIABLO ORBS, not perfect)
+static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/DiabloOrbs.glsl";
+
+static const std::filesystem::path s_VertexShaderPath   = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#endif
 
 static void ErrorCallback(int error, const char* description)
 {
@@ -601,6 +630,7 @@ std::string LoadShaderSource(const std::filesystem::path& path);
 
 static uint32_t s_ShaderProgram = 0;
 
+#ifdef _WIN32
 // https://www.shadertoy.com/view/XsXXDn
 //static const std::filesystem::path s_FragmentShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/Creation.glsl";
 // https://www.shadertoy.com/view/XslGRr (not perfect)
@@ -609,6 +639,19 @@ static uint32_t s_ShaderProgram = 0;
 static const std::filesystem::path s_FragmentShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/DiabloPortal.glsl";
 
 static const std::filesystem::path s_VertexShaderPath   = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#else
+
+// https://www.shadertoy.com/view/XsXXDn
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Creation.glsl";
+// https://www.shadertoy.com/view/XslGRr (not perfect)
+//static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/Clouds.glsl";
+// https://www.shadertoy.com/view/ldKGDh (no animation...)
+static const std::filesystem::path s_FragmentShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/DiabloPortal.glsl";
+
+static const std::filesystem::path s_VertexShaderPath   = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/fullscreen_triangle.vert";
+
+#endif
 
 static void ErrorCallback(int error, const char* description)
 {
@@ -726,6 +769,7 @@ int main()
 }
 #endif
 
+
 //
 // Fractal pyramid
 //
@@ -740,9 +784,15 @@ int main()
 
 static uint32_t s_ComputeShader = -1;
 // https://www.shadertoy.com/view/tsXBzS
+#ifdef _WIN32
 static const std::filesystem::path s_ComputeShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/FractalPyramid.glsl";
 // Also works
 //static const std::filesystem::path s_ComputeShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/valentine.glsl";
+#else
+static const std::filesystem::path s_ComputeShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/FractalPyramid.glsl";
+// Also works
+//static const std::filesystem::path s_ComputeShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/valentine.glsl";
+#endif
 
 static void ErrorCallback(int error, const char* description)
 {
@@ -916,6 +966,7 @@ int main()
 }
 #endif
 
+
 //
 // Original
 //
@@ -926,7 +977,12 @@ int main()
 #include "Renderer.h"
 
 static uint32_t s_ComputeShader = -1;
+
+#ifdef _WIN32
 static const std::filesystem::path s_ComputeShaderPath = "C:/Users/jonas/Code2/C++/GPUCompute/App/Shaders/valentine.glsl";
+#else
+static const std::filesystem::path s_ComputeShaderPath = "/home/jonas/Code2/C++/GPUCompute/App/Shaders/valentine.glsl";
+#endif
 
 static void ErrorCallback(int error, const char* description)
 {
