@@ -67,3 +67,4 @@ set_target_properties(glm PROPERTIES FOLDER "Dependencies")
 #
 
 add_subdirectory(App)
+
