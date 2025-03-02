@@ -1,32 +1,69 @@
 #version 460 core
 
-layout(rgba32f, binding = 0) uniform writeonly image2D outputImage;
+layout (local_size_x = 16, local_size_y = 16) in;
+layout (binding = 0, rgba32f) uniform writeonly image2D destImage;
 
-layout(local_size_x = 16, local_size_y = 16) in;
-void main()
-{
-    ivec2 pixelCoord = ivec2(gl_GlobalInvocationID.xy);
+uniform float iTime;
+uniform vec3 iResolution;
 
-    if (pixelCoord.x >= imageSize(outputImage).x || pixelCoord.y >= imageSize(outputImage).y)
-		return;
+vec3 palette(float d) {
+    return mix(vec3(0.2, 0.7, 0.9), vec3(1.0, 0.0, 1.0), d);
+}
 
-    ivec2 texSize = imageSize(outputImage);
-    vec2 fTexSize = vec2(texSize);
-    vec2 normalizedCoord = vec2(pixelCoord) / vec2(texSize);
+vec2 rotate(vec2 p, float a) {
+    float c = cos(a);
+    float s = sin(a);
+    return p * mat2(c, s, -s, c);
+}
 
-    vec4 O = vec4(0, 0, 0, 1);
-    vec2 I = vec2(pixelCoord);
+float map(vec3 p) {
+    for (int i = 0; i < 8; ++i) {
+        float t = iTime * 0.2;
+        p.xz = rotate(p.xz, t);
+        p.xy = rotate(p.xy, t * 1.89);
+        p.xz = abs(p.xz);
+        p.xz -= 0.5;
+    }
+    return dot(sign(p), p) / 5.0;
+}
 
-    float iTime = 2.2;
-    float i = 0.0, t=iTime;
-    O *= i;
-    for(vec2 a=fTexSize.xy, p=(I+I-a)/a.y; i++<20.;
-        O += (cos(sin(i*.2+t)*vec4(0,4,3,1))+2.)
-        /(i/1e3+abs(length(a-.5*min(a+a.yx,.1))-.05)))
-        a.x = abs(a = (fract(.2*t+.3*p*i*mat2(cos(cos(.2*t+.2*i)+vec4(0,11,33,0))))-.5)).x;
+vec4 rm(vec3 ro, vec3 rd) {
+    float t = 0.0;
+    vec3 col = vec3(0.0);
+    float d;
+    for (float i = 0.0; i < 64.0; i++) {
+        vec3 p = ro + rd * t;
+        d = map(p) * 0.5;
+        if (d < 0.02)
+            break;
+        if (d > 100.0)
+            break;
+        col += palette(length(p) * 0.1) / (400.0 * d);
+        t += d;
+    }
+    return vec4(col, 1.0 / (d * 100.0));
+}
+
+void main() {
+    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+    
+    // Discard work items that are outside the viewport
+    if (pixelCoords.x >= int(iResolution.x) || pixelCoords.y >= int(iResolution.y))
+        return;
         
-    O = tanh(O*O/2e5);
-
-    vec4 color = vec4(normalizedCoord, 0.0, 1.0);
-    imageStore(outputImage, pixelCoord, O);
+    vec2 fragCoord = vec2(pixelCoords);
+    vec2 uv = (fragCoord - (iResolution.xy * 0.5)) / iResolution.x;
+    
+    vec3 ro = vec3(0.0, 0.0, -50.0);
+    ro.xz = rotate(ro.xz, iTime);
+    vec3 cf = normalize(-ro);
+    vec3 cs = normalize(cross(cf, vec3(0.0, 1.0, 0.0)));
+    vec3 cu = normalize(cross(cf, cs));
+    
+    vec3 uuv = ro + cf * 3.0 + uv.x * cs + uv.y * cu;
+    vec3 rd = normalize(uuv - ro);
+    
+    vec4 col = rm(ro, rd);
+    
+    imageStore(destImage, pixelCoords, col);
 }
